@@ -75,6 +75,16 @@
             background: rgba(30, 41, 59, 0.9);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
+
+        /* Panel Transition Class */
+        .panel-closed {
+            flex: 0 0 0% !important;
+            min-width: 0 !important;
+            width: 0 !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+            border: none !important;
+        }
     </style>
 </head>
 <body class="text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-darkbg h-screen flex flex-col overflow-hidden transition-colors duration-300">
@@ -93,7 +103,12 @@
             </div>
             
             <div class="flex items-center gap-3">
-                <!-- Home Button (New) -->
+                <!-- Toggle PDF Viewer Button -->
+                <button onclick="togglePdfViewer()" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-primary hover:bg-slate-200 dark:hover:bg-slate-700 transition-all" title="إظهار/إخفاء المستند">
+                    <i class="fa-solid fa-columns"></i>
+                </button>
+
+                <!-- Home Button -->
                 <button onclick="goHome()" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-primary hover:bg-slate-200 dark:hover:bg-slate-700 transition-all" title="الصفحة الرئيسية">
                     <i class="fa-solid fa-house"></i>
                 </button>
@@ -113,7 +128,7 @@
     <main class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
         
         <!-- Left Panel: PDF Viewer -->
-        <div id="leftPanel" class="flex-1 flex flex-col bg-slate-200 dark:bg-black/20 min-w-[300px] h-full relative border-l border-slate-300 dark:border-slate-700 order-2 md:order-1 transition-colors duration-300">
+        <div id="leftPanel" class="flex-1 flex flex-col bg-slate-200 dark:bg-black/20 min-w-[300px] h-full relative border-l border-slate-300 dark:border-slate-700 order-2 md:order-1 transition-all duration-300 ease-in-out">
             
             <!-- PDF Toolbar -->
             <div id="pdfToolbar" class="bg-white dark:bg-secondary border-b border-slate-200 dark:border-slate-800 p-2 flex justify-between items-center hidden transition-colors duration-300">
@@ -143,7 +158,7 @@
         </div>
 
         <!-- Resizer Handle (Desktop) -->
-        <div id="resizer" class="w-2 h-full gutter hidden md:block z-20 order-1 md:order-2"></div>
+        <div id="resizer" class="w-2 h-full gutter hidden md:block z-20 order-1 md:order-2 transition-opacity duration-300"></div>
 
         <!-- Right Panel: Analysis & Upload -->
         <div id="rightPanel" class="flex-1 flex flex-col bg-slate-50 dark:bg-darkbg min-w-[350px] h-full overflow-hidden order-1 md:order-3 transition-colors duration-300 relative">
@@ -377,6 +392,22 @@
             });
         }
 
+        // --- Toggle PDF Viewer Logic (New) ---
+        function togglePdfViewer() {
+            const leftPanel = document.getElementById('leftPanel');
+            const resizer = document.getElementById('resizer');
+            
+            if (leftPanel.classList.contains('panel-closed')) {
+                // Open panel
+                leftPanel.classList.remove('panel-closed');
+                resizer.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                // Close panel
+                leftPanel.classList.add('panel-closed');
+                resizer.classList.add('opacity-0', 'pointer-events-none');
+            }
+        }
+
         // --- Reset / Go Home Logic ---
         function goHome() {
             // Reset UI
@@ -388,6 +419,14 @@
             document.getElementById('pdfToolbar').classList.add('hidden');
             document.getElementById('the-canvas').classList.add('hidden');
             
+            // Show panel if hidden
+            const leftPanel = document.getElementById('leftPanel');
+            const resizer = document.getElementById('resizer');
+            if (leftPanel.classList.contains('panel-closed')) {
+                leftPanel.classList.remove('panel-closed');
+                resizer.classList.remove('opacity-0', 'pointer-events-none');
+            }
+
             // Reset Input & Button
             document.getElementById('fileInput').value = '';
             document.getElementById('fileName').textContent = 'اختر ملف PDF';
