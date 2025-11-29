@@ -31,6 +31,7 @@
                         darkbg: '#020617', // Very dark slate
                         darkcard: '#1e293b', // Slate 800
                         electric: '#06b6d4', // Cyan 500
+                        research: '#7c3aed', // Violet 600 for Research Mode
                     }
                 }
             }
@@ -105,6 +106,12 @@
             100% { transform: scale(1); }
         }
         .animate-brain { animation: brain-pulse 3s infinite; }
+        
+        /* Tab Active State */
+        .tab-active {
+            border-bottom: 3px solid;
+            color: inherit;
+        }
     </style>
 </head>
 <body class="text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-darkbg h-screen flex flex-col overflow-hidden transition-colors duration-300">
@@ -120,7 +127,7 @@
                         </div>
                         <span class="text-xl font-extrabold text-primary dark:text-blue-400 leading-none">فَهِيم</span>
                     </div>
-                    <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 mt-1">By Omar AL-imam</span>
+                    <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 mt-1">Omar AL-imam</span>
                 </div>
             </div>
             
@@ -181,15 +188,32 @@
         <div id="rightPanel" class="flex-1 flex flex-col bg-slate-50 dark:bg-darkbg min-w-[350px] h-full overflow-hidden order-1 md:order-3 relative">
             <div class="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth custom-scrollbar relative" id="analysisContent">
                 
-                <!-- Upload View -->
-                <section id="uploadSection" class="max-w-xl mx-auto text-center py-10 lg:py-20 fade-in">
-                    <div class="mb-12 animate-fade-in-up">
+                <!-- Main Header & Tabs -->
+                <div class="max-w-xl mx-auto text-center pt-8 pb-4 fade-in">
+                    <div class="mb-8 animate-fade-in-up">
                         <h1 class="text-5xl md:text-6xl font-extrabold text-primary dark:text-blue-400 mb-4 tracking-tight animate-title-glow flex items-center justify-center gap-4 flex-wrap">
                             فهيم أفندي 
                             <span class="text-electric text-4xl md:text-5xl inline-block animate-brain"><i class="fa-solid fa-brain"></i></span>
                         </h1>
                         <p class="text-xs md:text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-[0.3em]">Project by Omar Al-imam</p>
-                        
+                    </div>
+
+                    <!-- Mode Switcher Tabs -->
+                    <div class="flex justify-center gap-6 mb-8 border-b border-slate-200 dark:border-slate-700">
+                        <button onclick="switchMode('book')" id="tabBook" class="pb-3 text-lg font-bold text-primary border-primary tab-active transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-file-pdf"></i> تحليل الكتب
+                        </button>
+                        <button onclick="switchMode('research')" id="tabResearch" class="pb-3 text-lg font-bold text-slate-400 border-transparent hover:text-research transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-magnifying-glass"></i> بحث AI
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 1. Book Upload View -->
+                <section id="modeBook" class="max-w-xl mx-auto text-center fade-in">
+                    <div class="mb-8">
+                        <h2 class="text-2xl font-bold text-secondary dark:text-white mb-2 leading-tight">حلل كتبك <span class="text-primary dark:text-blue-400">بذكاء</span></h2>
+                        <p class="text-slate-500 dark:text-slate-400">ارفع ملف PDF واحصل على تحليل شامل فوري.</p>
                         <!-- Language Indicator -->
                         <div id="langIndicator" class="mt-4 hidden">
                             <span class="px-3 py-1 rounded-full text-xs font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
@@ -197,7 +221,7 @@
                             </span>
                         </div>
                     </div>
-
+                    
                     <div class="glass rounded-3xl p-10 border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-primary dark:hover:border-blue-500 transition-all duration-300 relative group">
                         <input type="file" id="fileInput" accept=".pdf,.txt" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
                         <div class="flex flex-col items-center gap-4 group-hover:scale-105 transition-transform duration-300">
@@ -215,7 +239,24 @@
                     </button>
                 </section>
 
-                <!-- Results Dashboard -->
+                <!-- 2. Research View (New Feature) -->
+                <section id="modeResearch" class="max-w-xl mx-auto text-center fade-in hidden">
+                    <div class="mb-8">
+                        <h2 class="text-2xl font-bold text-secondary dark:text-white mb-2 leading-tight">محرر بحث <span class="text-research dark:text-violet-400">بالذكاء الاصطناعي</span></h2>
+                        <p class="text-slate-500 dark:text-slate-400">اكتب أي موضوع واحصل على بحث شامل فوراً.</p>
+                    </div>
+
+                    <div class="glass rounded-3xl p-6 border border-slate-200 dark:border-slate-700 shadow-lg text-left">
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">موضوع البحث</label>
+                        <textarea id="researchInput" rows="3" placeholder="مثال: أسباب سقوط الدولة العباسية، Climate Change, Artificial Intelligence..." class="w-full p-4 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-research focus:border-transparent outline-none transition-all resize-none"></textarea>
+                        
+                        <button onclick="startResearch()" class="mt-4 w-full bg-research hover:bg-violet-700 text-white py-4 rounded-xl font-bold shadow-lg shadow-violet-900/20 transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-microchip"></i> Generate Summary
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Results Dashboard (Book) -->
                 <div id="resultsDashboard" class="hidden space-y-8 pb-20">
                     <!-- Actions Toolbar -->
                     <div class="flex justify-between items-center bg-white dark:bg-secondary p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
@@ -315,13 +356,57 @@
                         <button onclick="checkQuiz()" class="mt-6 w-full bg-secondary dark:bg-black text-white py-3 rounded-xl font-bold hover:bg-slate-800">Check Answers</button>
                     </div>
                 </div>
+
+                <!-- Research Results Dashboard (New) -->
+                <div id="researchResultsDashboard" class="hidden space-y-8 pb-20">
+                    <div class="glass rounded-2xl p-6 border-l-4 border-research shadow-lg">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="bg-violet-100 dark:bg-violet-900/30 text-research dark:text-violet-400 p-2 rounded-lg"><i class="fa-solid fa-microscope"></i></div>
+                            <h2 class="text-xl font-bold text-secondary dark:text-white">Topic Summary</h2>
+                        </div>
+                        <div id="resSummary" class="prose prose-slate dark:prose-invert max-w-none leading-loose text-justify text-sm md:text-base"></div>
+                    </div>
+
+                    <div class="glass rounded-2xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 p-2 rounded-lg"><i class="fa-solid fa-list-check"></i></div>
+                            <h2 class="text-xl font-bold text-secondary dark:text-white">Key Points</h2>
+                        </div>
+                        <ul id="resPoints" class="space-y-3"></ul>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="glass rounded-2xl p-6">
+                            <h3 class="font-bold text-lg mb-4 text-accent dark:text-amber-400"><i class="fa-solid fa-book-atlas"></i> Definitions</h3>
+                            <div id="resDefinitions" class="space-y-3"></div>
+                        </div>
+                        <div class="glass rounded-2xl p-6">
+                            <h3 class="font-bold text-lg mb-4 text-indigo-600 dark:text-indigo-400"><i class="fa-solid fa-project-diagram"></i> Concept Map</h3>
+                            <div id="resMindMap" class="w-full overflow-x-auto"></div>
+                        </div>
+                    </div>
+
+                    <div class="glass rounded-2xl p-6 border-l-4 border-electric">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="bg-cyan-100 dark:bg-cyan-900/30 text-electric dark:text-cyan-400 p-2 rounded-lg"><i class="fa-solid fa-layer-group"></i></div>
+                            <h2 class="text-xl font-bold text-secondary dark:text-white">Deep Explanation</h2>
+                        </div>
+                        <div id="resDeepDive" class="prose prose-slate dark:prose-invert max-w-none"></div>
+                    </div>
+
+                    <div class="glass rounded-2xl p-6 border-t-4 border-research">
+                        <h2 class="text-xl font-bold text-secondary dark:text-white mb-6">Knowledge Check</h2>
+                        <div id="resQuiz" class="space-y-6"></div>
+                    </div>
+                </div>
+
             </div>
 
             <!-- Loading Overlay -->
             <div id="loadingOverlay" class="absolute inset-0 bg-white/90 dark:bg-secondary/90 backdrop-blur-sm z-[60] hidden flex-col items-center justify-center text-center">
                 <span class="loader mb-4"></span>
-                <h3 class="text-xl font-bold text-primary dark:text-blue-400 mb-1">Analyzing...</h3>
-                <p id="loadingStep" class="text-sm text-slate-500 dark:text-slate-400 animate-pulse">Processing document structure</p>
+                <h3 class="text-xl font-bold text-primary dark:text-blue-400 mb-1">Working...</h3>
+                <p id="loadingStep" class="text-sm text-slate-500 dark:text-slate-400 animate-pulse">Processing request</p>
             </div>
         </div>
     </main>
@@ -376,6 +461,7 @@
         let currentAnalysis = null;
         let currentBookTitle = "Untitled";
         let detectedLang = 'ar';
+        let currentMode = 'book';
 
         // --- Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
@@ -385,21 +471,154 @@
             mermaid.initialize({ startOnLoad: false, theme: document.documentElement.classList.contains('dark') ? 'dark' : 'default', direction: 'rtl' });
         });
 
+        // --- Mode Switching ---
+        function switchMode(mode) {
+            currentMode = mode;
+            // Tabs UI
+            if(mode === 'book') {
+                document.getElementById('tabBook').classList.add('text-primary', 'border-primary', 'tab-active');
+                document.getElementById('tabBook').classList.remove('text-slate-400', 'border-transparent');
+                
+                document.getElementById('tabResearch').classList.remove('text-research', 'border-research', 'tab-active');
+                document.getElementById('tabResearch').classList.add('text-slate-400', 'border-transparent');
+                
+                document.getElementById('modeBook').classList.remove('hidden');
+                document.getElementById('modeResearch').classList.add('hidden');
+            } else {
+                document.getElementById('tabResearch').classList.add('text-research', 'border-research', 'tab-active');
+                document.getElementById('tabResearch').classList.remove('text-slate-400', 'border-transparent');
+                
+                document.getElementById('tabBook').classList.remove('text-primary', 'border-primary', 'tab-active');
+                document.getElementById('tabBook').classList.add('text-slate-400', 'border-transparent');
+                
+                document.getElementById('modeResearch').classList.remove('hidden');
+                document.getElementById('modeBook').classList.add('hidden');
+            }
+            
+            // Hide results
+            document.getElementById('resultsDashboard').classList.add('hidden');
+            document.getElementById('researchResultsDashboard').classList.add('hidden');
+        }
+
         // --- Language Detection ---
         function detectLanguage(text) {
             const arabicPattern = /[\u0600-\u06FF]/;
-            const isArabic = arabicPattern.test(text.substring(0, 1000)); // Check first 1000 chars
+            const isArabic = arabicPattern.test(text.substring(0, 1000)); 
             detectedLang = isArabic ? 'ar' : 'en';
             
             // Update UI
-            const indicator = document.getElementById('langIndicator');
-            const langText = document.getElementById('detectedLang');
-            indicator.classList.remove('hidden');
-            langText.textContent = isArabic ? "Arabic (العربية)" : "English";
+            if(currentMode === 'book') {
+                const indicator = document.getElementById('langIndicator');
+                const langText = document.getElementById('detectedLang');
+                indicator.classList.remove('hidden');
+                langText.textContent = isArabic ? "Arabic (العربية)" : "English";
+            }
             
             // Update direction
             document.documentElement.dir = isArabic ? 'rtl' : 'ltr';
             return isArabic;
+        }
+
+        // --- Research Logic ---
+        async function startResearch() {
+            if(!API_KEY) {
+                document.getElementById('settingsModal').classList.remove('hidden');
+                return;
+            }
+            const topic = document.getElementById('researchInput').value.trim();
+            if(!topic) {
+                alert("الرجاء كتابة موضوع البحث.");
+                return;
+            }
+
+            document.getElementById('loadingOverlay').classList.remove('hidden');
+            document.getElementById('loadingOverlay').classList.add('flex');
+            document.getElementById('modeResearch').classList.add('hidden');
+
+            try {
+                const isArabic = detectLanguage(topic);
+                const langPrompt = isArabic ? "ARABIC" : "ENGLISH";
+
+                const RESEARCH_PROMPT = `
+                Act as "Fahim Afandi". Research the following topic: "${topic}".
+                Language: ${langPrompt}.
+                
+                Return VALID JSON with this structure:
+                {
+                    "summary": "Detailed comprehensive summary",
+                    "key_points": ["Point 1", "Point 2"],
+                    "definitions": [{"term": "...", "definition": "..."}],
+                    "deep_explanation": "Deep dive into subtopics with examples...",
+                    "mind_map_mermaid": "graph TD; ...",
+                    "quiz": [{"question": "...", "options": ["..."], "correct_index": 0}]
+                }
+                `;
+
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: RESEARCH_PROMPT }] }],
+                        generationConfig: { responseMimeType: "application/json" }
+                    })
+                });
+
+                const data = await response.json();
+                if(!data.candidates) throw new Error("API Error");
+                
+                const resultJSON = JSON.parse(data.candidates[0].content.parts[0].text);
+                
+                renderResearchResults(resultJSON);
+
+            } catch (error) {
+                console.error(error);
+                alert("Error: " + error.message);
+                document.getElementById('modeResearch').classList.remove('hidden');
+            } finally {
+                document.getElementById('loadingOverlay').classList.add('hidden');
+                document.getElementById('loadingOverlay').classList.remove('flex');
+            }
+        }
+
+        function renderResearchResults(data) {
+            const dashboard = document.getElementById('researchResultsDashboard');
+            dashboard.classList.remove('hidden');
+
+            document.getElementById('resSummary').textContent = data.summary;
+            document.getElementById('resDeepDive').textContent = data.deep_explanation;
+
+            document.getElementById('resPoints').innerHTML = data.key_points.map(p => `
+                <li class="flex items-start gap-3 p-3 rounded-lg bg-white dark:bg-darkcard border border-slate-100 dark:border-slate-700">
+                    <i class="fa-solid fa-check text-green-500 mt-1"></i>
+                    <span class="text-slate-700 dark:text-slate-300">${p}</span>
+                </li>
+            `).join('');
+
+            document.getElementById('resDefinitions').innerHTML = data.definitions.map(d => `
+                <div class="bg-amber-50 dark:bg-amber-900/20 p-2 rounded border border-amber-100 dark:border-amber-800 text-sm">
+                    <span class="font-bold text-accent dark:text-amber-400">${d.term}:</span>
+                    <span class="text-slate-600 dark:text-slate-300">${d.definition}</span>
+                </div>
+            `).join('');
+
+            const mermaidDiv = document.getElementById('resMindMap');
+            mermaidDiv.innerHTML = `<div class="mermaid">${data.mind_map_mermaid}</div>`;
+            mermaid.init(undefined, document.querySelectorAll('.mermaid'));
+
+            document.getElementById('resQuiz').innerHTML = data.quiz.map((q, i) => `
+                <div class="bg-white dark:bg-darkcard p-5 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm quiz-card" data-correct="${q.correct_index}">
+                    <p class="font-bold text-base mb-3 text-secondary dark:text-slate-200"><span class="text-red-500">Q${i+1}.</span> ${q.question}</p>
+                    <div class="space-y-2">
+                        ${q.options.map((opt, optIdx) => `
+                            <label class="flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-600 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                                <input type="radio" name="rq${i}" value="${optIdx}" class="w-4 h-4 text-research">
+                                <span class="text-slate-700 dark:text-slate-300 text-sm">${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    <div class="feedback mt-2 hidden font-bold text-sm"></div>
+                </div>
+            `).join('');
         }
 
         // --- Offline Storage Logic ---
@@ -414,7 +633,6 @@
             };
             
             // Try to save to localStorage (simple method for preview)
-            // In a real app, IndexedDB is better for large data
             try {
                 // Check storage limit mechanism roughly
                 const existing = JSON.parse(localStorage.getItem('fahim_files') || '[]');
@@ -581,10 +799,15 @@
         // --- Reset Logic ---
         function goHome() {
             document.getElementById('resultsDashboard').classList.add('hidden');
+            document.getElementById('researchResultsDashboard').classList.add('hidden');
             document.getElementById('uploadSection').classList.remove('hidden');
             document.getElementById('uploadPlaceholder').classList.remove('hidden');
             document.getElementById('pdfToolbar').classList.add('hidden');
             document.getElementById('the-canvas').classList.add('hidden');
+            
+            // Reset to Book Mode default
+            switchMode('book');
+            
             const leftPanel = document.getElementById('leftPanel');
             const resizer = document.getElementById('resizer');
             if (leftPanel.classList.contains('panel-closed')) {
@@ -594,6 +817,7 @@
             document.getElementById('fileInput').value = '';
             document.getElementById('fileName').textContent = 'اختر ملف PDF';
             document.getElementById('startBtn').classList.add('hidden');
+            document.getElementById('researchInput').value = '';
             pdfDoc = null;
             pageNum = 1;
             if (ctx) {
