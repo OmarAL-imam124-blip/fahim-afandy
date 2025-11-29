@@ -26,6 +26,7 @@
                         accent: '#d97706', // Amber 600
                         darkbg: '#020617', // Very dark slate
                         darkcard: '#1e293b', // Slate 800
+                        electric: '#06b6d4', // Cyan 500 for the electronic brain feel
                     }
                 }
             }
@@ -85,6 +86,30 @@
             overflow: hidden !important;
             border: none !important;
         }
+
+        /* Glow Animation for Title */
+        @keyframes text-glow {
+            0%, 100% {
+                text-shadow: 0 0 10px rgba(59, 130, 246, 0.5), 0 0 20px rgba(59, 130, 246, 0.3);
+            }
+            50% {
+                text-shadow: 0 0 20px rgba(6, 182, 212, 0.8), 0 0 30px rgba(6, 182, 212, 0.5);
+            }
+        }
+        
+        .animate-title-glow {
+            animation: text-glow 3s ease-in-out infinite;
+        }
+
+        /* Brain Pulse */
+        @keyframes brain-pulse {
+            0% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(6, 182, 212, 0)); }
+            50% { transform: scale(1.1); filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.5)); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(6, 182, 212, 0)); }
+        }
+        .animate-brain {
+            animation: brain-pulse 3s infinite;
+        }
     </style>
 </head>
 <body class="text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-darkbg h-screen flex flex-col overflow-hidden transition-colors duration-300">
@@ -93,9 +118,11 @@
     <nav class="bg-white dark:bg-secondary border-b border-slate-200 dark:border-slate-800 h-16 shrink-0 z-50 transition-colors duration-300">
         <div class="max-w-full px-4 h-full flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="bg-primary text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-lg shadow-blue-900/20">
+                <!-- Logo Icon -->
+                <div class="bg-primary text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-lg shadow-blue-900/20 cursor-pointer" onclick="goHome()" title="الرئيسية">
                     <i class="fa-solid fa-book-open text-sm"></i>
                 </div>
+                <!-- Navbar Title (Restored) -->
                 <div>
                     <h1 class="text-xl font-extrabold text-primary dark:text-blue-400 tracking-tight leading-none">Fahim Afandi</h1>
                     <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest leading-none">Project by Omar Al-imam</p>
@@ -167,9 +194,21 @@
             <div class="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth custom-scrollbar relative" id="analysisContent">
                 
                 <!-- Initial Upload View -->
-                <section id="uploadSection" class="max-w-xl mx-auto text-center py-20 fade-in">
+                <section id="uploadSection" class="max-w-xl mx-auto text-center py-10 lg:py-20 fade-in">
+                    
+                    <!-- Main Branding Title with Glow and Electronic Brain -->
+                    <div class="mb-12 animate-fade-in-up">
+                        <h1 class="text-5xl md:text-6xl font-extrabold text-primary dark:text-blue-400 mb-4 tracking-tight animate-title-glow flex items-center justify-center gap-4 flex-wrap">
+                            فهيم أفندي 
+                            <span class="text-electric text-4xl md:text-5xl inline-block animate-brain">
+                                <i class="fa-solid fa-brain"></i>
+                            </span>
+                        </h1>
+                        <p class="text-xs md:text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-[0.3em]">Project by Omar Al-imam</p>
+                    </div>
+
                     <div class="mb-8">
-                        <h2 class="text-4xl font-bold text-secondary dark:text-white mb-2 leading-tight">حلل كتبك <span class="text-primary dark:text-blue-400">بذكاء</span></h2>
+                        <h2 class="text-3xl font-bold text-secondary dark:text-white mb-2 leading-tight">حلل كتبك <span class="text-primary dark:text-blue-400">بذكاء</span></h2>
                         <p class="text-slate-500 dark:text-slate-400">ارفع ملف PDF واحصل على تحليل شامل فوري.</p>
                     </div>
                     
